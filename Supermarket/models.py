@@ -21,7 +21,8 @@ class Product(models.Model):
     CATEGORY_CHOICES = [
         ('Electronics', 'Electronics'),
         ('Kids', 'Kids'),
-        ('ToysFruits and Vegetables', 'Fruits and Vegetables'),
+        ('Fruits', 'Fruits'),
+        ('Vegetables', 'Vegetables'),
         ('Home appliances', 'Home Appliances'),
         ('Other', 'Other'),
     ]
