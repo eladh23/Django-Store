@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 
 
 api_view(['GET'])
-def welcome_page(request):
+def index(request):
     api_endpoints = {
         "message": "Welcome to My Store API!",
         "endpoints": {
