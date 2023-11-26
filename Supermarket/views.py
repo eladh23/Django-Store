@@ -6,12 +6,24 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 
-@api_view(['GET'])
-def index(request):
+api_view(['GET'])
+def welcome_page(request):
     api_endpoints = {
-        "message": "Welcome to my Django API!",
+        "message": "Welcome to My Store API!",
+        "endpoints": {
+            "all_products": "/products/",
+            "product_detail": "/products/<id>",
+            "unique_categories": "/products/category/",
+            "carts": "/carts/",
+            "cart_detail": "/carts/<id>",
+            "cart_items": "/cart_items/",
+            "cart_item_detail": "/cart_items/<id>",
+            "token": "/token/",
+            "token_refresh": "/token/refresh/",
+        },
+        "additional_info": "Replace <id> with the respective ID in the URL."
     }
-    return Response(api_endpoints) 
+    return Response(api_endpoints)
 
 
 @api_view(['GET', 'POST'])
