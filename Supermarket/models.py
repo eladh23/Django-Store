@@ -31,7 +31,7 @@ class Product(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return self.name 
     
 class Cart(models.Model):
     is_paid = models.BooleanField(default=False)

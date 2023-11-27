@@ -58,7 +58,7 @@ def products(request):
 def get_one_categories(request):
     if request.method == 'GET':
         categories = Product.objects.values_list('category', flat=True).distinct()
-        one_categories = list(categories)
+        one_categories = list(categories) #make it list.
         return JsonResponse(one_categories, safe=False, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PUT', 'DELETE'])
