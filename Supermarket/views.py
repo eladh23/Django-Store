@@ -13,13 +13,14 @@ def index(request):
         "endpoints": {
             "all_products": "/products/",
             "product_detail": "/products/<id>",
-            "unique_categories": "/products/category/",
+            "get_one_categories": "/products/category/",
             "carts": "/carts/",
             "cart_detail": "/carts/<id>",
             "cart_items": "/cart_items/",
             "cart_item_detail": "/cart_items/<id>",
             "token": "/token/",
             "token_refresh": "/token/refresh/",
+            "user_name":"/user/<id>",
         },
         "additional_info": "Replace <id> with the respective ID in the URL."
     }
