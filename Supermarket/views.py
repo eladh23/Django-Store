@@ -3,8 +3,10 @@ from rest_framework import status
 from .models import CartItem, Product,Cart
 from .serializers import CartItemSerializer, CartSerializer, CustomUserSerializer, ProductSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view ,permission_classes
 from Supermarket.models import CustomUser
+
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(['GET'])
@@ -158,7 +160,7 @@ def cart_item_detail(request, id):
         cart_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)    
     
-    def get_username_by_id(request, user_id):
+def get_username_by_id(request, user_id):
         try:
             user = CustomUser.objects.get(pk=user_id)
             username = user.username
@@ -168,7 +170,7 @@ def cart_item_detail(request, id):
     
 
 @api_view(['POST'])
-def user_registration(request):
+def user_register(request):
     if request.method == 'POST':
         serializer = CustomUserSerializer(data=request.data)
         if serializer.is_valid():
@@ -186,14 +188,33 @@ def get_username_by_id(request, user_id):
     except CustomUser.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  
+def user_carts(request, user_id):
+    try:
+        cartuser_carts = Cart.objects.filter(cartitem__user=user_id, cartitem__cart__isnull=False).distinct()
+    except Cart.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        cartuser_carts_data = []
+        for cart in cartuser_carts:
+            cart_data = {
+                'id': cart.id,
+                'create_date': cart.create_date,
+                'user_id': cart.user.id,
+                'cart_items': []  # Placeholder for cart items
+            }
+            cart_items = CartItem.objects.filter(cart=cart)
+            for cart_item in cart_items:
+                cart_item_info = {
+                    'product': cart_item.product.id,
+                    'quantity': cart_item.quantity,
+                    # Add other cart item details as needed
+                }
+                cart_data['cart_items'].append(cart_item_info)
+            cartuser_carts_data.append(cart_data)
 
-@api_view(['POST'])
-def user_registration(request):
-    if request.method == 'POST':
-        serializer = CustomUserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response("Method not allowed", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(cartuser_carts_data)
+    
+    return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
