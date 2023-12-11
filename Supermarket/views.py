@@ -160,7 +160,7 @@ def cart_item_detail(request, id):
         cart_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)    
     
-def get_username_by_id(request, user_id):
+def get_username_by_id( user_id):
         try:
             user = CustomUser.objects.get(pk=user_id)
             username = user.username
